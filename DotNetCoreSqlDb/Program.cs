@@ -9,7 +9,7 @@ builder.Services.AddDbContext<MyDatabaseContext>(options =>
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration["AZURE_REDIS_CONNECTIONSTRING"];
-    options.InstanceName = "SampleInstance";
+    options.InstanceName = "grafanatechtest-cache.redis.cache.windows.net:6380,password=eXxghosoK1VtptsMyx5qgjOMRCNzBOvhcAzCaISiCmU=,ssl=True,defaultDatabase=0";
 });
 
 // Add services to the container.
