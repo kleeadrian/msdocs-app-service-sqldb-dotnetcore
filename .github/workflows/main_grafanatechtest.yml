@@ -27,12 +27,6 @@ jobs:
 
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-        
-      - name: dotnet install ef
-        run: dotnet tool install -g dotnet-ef --version 7.0.14
-
-      - name: dotnet bundle migration
-        run: dotnet ef migrations bundle --runtime linux-x64 -p DotNetCoreSqlDb/DotNetCoreSqlDb.csproj -o ${{env.DOTNET_ROOT}}/myapp/migrate
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -46,21 +40,12 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: .net-app
-      
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_BCE9BA1B39F6435080A3ADD86B7B0173 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_DEFD507F5E3746E292F5F6FAC8174B58 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4712AEAC889E4353992C343733CA81AE }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -68,5 +53,5 @@ jobs:
         with:
           app-name: 'grafanatechtest'
           slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FE73241D46F84BA2BC81AF396D0960DA }}
           package: .
-          
